@@ -1,7 +1,7 @@
+// Copyright 2022 Petrova Kseniya <ksyushki5@yandex.ru>
 
-
-#ifndef SERVER_HPP_
-#define SERVER_HPP_
+#ifndef INCLUDE_SERVER_HPP_
+#define INCLUDE_SERVER_HPP_
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
@@ -16,6 +16,7 @@
 #include <fstream>
 #include <iomanip>
 #include <utility>
+#include <memory>
 
 #include "from_json.hpp"
 #include "suggestions.hpp"
@@ -185,4 +186,4 @@ void suggestion_updater(
   }
 }
 
-#endif  // SERVER_HPP_
+#endif  // INCLUDE_SERVER_HPP_

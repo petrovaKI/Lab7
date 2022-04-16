@@ -1,4 +1,4 @@
-// Copyright 2021 Petrova Kseniya ksyushki5@yandex.ru>
+// Copyright 2022 Petrova Kseniya ksyushki5@yandex.ru>
 
 #ifndef INCLUDE_SUGGESTIONS_HPP_
 #define INCLUDE_SUGGESTIONS_HPP_

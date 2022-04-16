@@ -1,4 +1,4 @@
-// Copyright 2021 Petrova Kseniya <ksyushki5@yandex.ru>
+// Copyright 2022 Petrova Kseniya <ksyushki5@yandex.ru>
 #include <boost/program_options.hpp>
 #include "server.hpp"
 

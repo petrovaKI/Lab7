@@ -1,7 +1,7 @@
-// Copyright 2021 Petrova Kseniya <ksyushki5@yandex.ru>
+// Copyright 2022 Petrova Kseniya <ksyushki5@yandex.ru>
 
-#ifndef STORE_TO_JSON_HPP_
-#define STORE_TO_JSON_HPP_
+#ifndef INCLUDE_FROM_JSON_HPP_
+#define INCLUDE_FROM_JSON_HPP_
 
 #include <iostream>
 #include <string>
@@ -20,4 +20,4 @@ class LoadFromFile{
   std::string _path; //путь до файла с коллекцией
 };
 
-#endif  // STORE_TO_JSON_HPP_
+#endif  // INCLUDE_FROM_JSON_HPP_
