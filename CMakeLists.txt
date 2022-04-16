@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.12)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(Boost_USE_STATIC_LIBS ON)
 
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_DOCS "Build documentation" OFF)
@@ -16,69 +17,65 @@ set(
 include("cmake/HunterGate.cmake")
 
 HunterGate(
-        URL "https://github.com/cpp-pm/hunter/archive/v0.23.314.tar.gz"
-        SHA1 "95c47c92f68edb091b5d6d18924baabe02a6962a"
+        URL "https://github.com/cpp-pm/hunter/archive/v0.23.278.tar.gz"
+        SHA1 "35fa55bc1dfcf9f4d7264f8bb26cd1759ce1ae07"
 )
 
-project(lab7)
+project(http-server-lab07)
 string(APPEND CMAKE_CXX_FLAGS " -pedantic -Werror -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -Wno-unused-command-line-argument")
 string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
 
+add_compile_definitions(JPATH="${CMAKE_CURRENT_SOURCE_DIR}/suggestions.json")
+
+hunter_add_package(Beast)
+find_package(Beast CONFIG REQUIRED)
+
+hunter_add_package(Boost COMPONENTS
+        thread
+        filesystem
+        program_options)
+find_package(Boost CONFIG REQUIRED
+        thread
+        filesystem
+        program_options)
+find_package(Threads)
+
 hunter_add_package(GTest)
 find_package(GTest CONFIG REQUIRED)
-
-hunter_add_package(Boost COMPONENTS filesystem log system thread)
-find_package(Boost CONFIG REQUIRED filesystem log log_setup system thread)
-
-hunter_add_package(Boost COMPONENTS log thread system)
-find_package(Boost CONFIG REQUIRED log thread system)
-
-set(Boost_USE_STATIC_LIBS ON)
-hunter_add_package(Boost COMPONENTS log filesystem system chrono thread regex date_time atomic)
-find_package(Boost CONFIG REQUIRED log log_setup filesystem system chrono thread regex date_time atomic)
-
-find_package(Threads REQUIRED)
 
 hunter_add_package(nlohmann_json)
 find_package(nlohmann_json CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/sources/suggestions.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/sources/from_json.cpp include/server.hpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/sources/from_json.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/sources/suggestions.cpp)
 
 add_executable(demo
         ${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp
         )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${Boost_INCLUDE_DIRS}
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party>"
         "$<INSTALL_INTERFACE:include>"
         )
 
+target_link_libraries(demo ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME}
-        Boost::log_setup
-        Boost::log
-        Boost::filesystem
-        Boost::chrono
         Boost::thread
-        Boost::regex
-        Boost::date_time
-        Boost::atomic
+        Boost::filesystem
         Boost::system
-        Boost::boost
+        Beast::Beast
         nlohmann_json::nlohmann_json
         )
-
-target_link_libraries(demo ${PROJECT_NAME})
 
 if(BUILD_TESTS)
   add_executable(tests
           ${CMAKE_CURRENT_SOURCE_DIR}/tests/test.cpp
           )
-  target_link_libraries(tests ${PROJECT_NAME} GTest::gtest_main)
+  target_link_libraries(tests ${PROJECT_NAME}
+          GTest::gtest_main
+          GTest::gmock_main)
   enable_testing()
   add_test(NAME unit_tests COMMAND tests)
 endif()
